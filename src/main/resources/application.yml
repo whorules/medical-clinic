@@ -1,0 +1,23 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/medical-clinic
+    username: postgres
+    password: postgres
+    platform: postgresql
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.ddl-auto: none
+  liquibase:
+    change-log: classpath:db/changelog.yml
+  jackson:
+    default-property-inclusion: NON_NULL
+app:
+  security:
+    jwtSecret: JDJhJDA4JGpUdXQ2eGdZTzE1RFpGU0lkMGpkYWVsZEtGdDhXSjh6YTRXbVptVjVVNjFCRkhXc0Q0em1X
+    jwtTimeToLive: ${JWT_TIME_TO_LIVE:144000}
+    jwtIssuer: ${spring.application.name}
+    jwtAudience: '${spring.application.name}-api'

@@ -5,6 +5,6 @@ databaseChangeLog:
       author: Alexey Korovko
       changes:
         - sqlFile:
-            path: changelog/001-create-registered-user.sql
+            path: sql/001-create-registered-user.sql
             enchoding: utf8
             relativeToChangelogFile: true
