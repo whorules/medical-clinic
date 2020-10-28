@@ -1,4 +1,4 @@
-package ru.korovko.clinic.security.impl;
+package ru.korovko.clinic.security.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.korovko.clinic.security.dto.UserPrincipal;
 import ru.korovko.clinic.security.service.AuthenticationService;
+import ru.korovko.clinic.security.service.impl.TokenProvider;
 
 @Service
 @AllArgsConstructor

@@ -1,7 +1,6 @@
-package ru.korovko.clinic.security.impl;
+package ru.korovko.clinic.security.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;

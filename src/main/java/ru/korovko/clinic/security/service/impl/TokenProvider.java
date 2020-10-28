@@ -1,4 +1,4 @@
-package ru.korovko.clinic.security.impl;
+package ru.korovko.clinic.security.service.impl;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

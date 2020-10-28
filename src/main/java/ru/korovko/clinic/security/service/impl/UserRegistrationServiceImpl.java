@@ -1,11 +1,11 @@
-package ru.korovko.clinic.security.impl;
+package ru.korovko.clinic.security.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.korovko.clinic.entity.User;
-import ru.korovko.clinic.exception.UserAlreadyExistsException;
+import ru.korovko.clinic.exception.UserAlreadyRegisteredException;
 import ru.korovko.clinic.mapper.UserMapper;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
 import ru.korovko.clinic.security.dto.UserRegistrationRequest;
@@ -24,7 +24,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Transactional
     public RegistrationResponse registerNewUser(UserRegistrationRequest registrationRequest) {
         if (userRepository.findByEmail(registrationRequest.getEmail().trim()).isPresent()) {
-            throw new UserAlreadyExistsException("User with such email has already been registered");
+            throw new UserAlreadyRegisteredException("User with such email has already been registered");
         }
         User user = userMapper.toUser(registrationRequest);
         user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));

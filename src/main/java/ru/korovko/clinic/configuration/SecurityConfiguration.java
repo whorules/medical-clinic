@@ -17,11 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.korovko.clinic.security.impl.CustomExceptionTranslationFilter;
-import ru.korovko.clinic.security.impl.CustomUserDetailsService;
-import ru.korovko.clinic.security.impl.JwtAuthorizationFilter;
-import ru.korovko.clinic.security.impl.TokenProvider;
-import ru.korovko.clinic.security.impl.UserServiceAuthenticationEntryPoint;
+import ru.korovko.clinic.security.service.impl.CustomExceptionTranslationFilter;
+import ru.korovko.clinic.security.service.impl.CustomUserDetailsService;
+import ru.korovko.clinic.security.service.impl.JwtAuthorizationFilter;
+import ru.korovko.clinic.security.service.impl.TokenProvider;
+import ru.korovko.clinic.security.service.impl.UserServiceAuthenticationEntryPoint;
 
 @EnableWebSecurity
 @Configuration
