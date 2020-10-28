@@ -4,11 +4,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import ru.korovko.clinic.entity.User;
 import ru.korovko.clinic.security.dto.UserPrincipal;
-import ru.korovko.clinic.security.model.User;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface UserPrincipalMapper {
@@ -19,6 +18,6 @@ public interface UserPrincipalMapper {
 
     @Named("authoritiesMapping")
     default Set<SimpleGrantedAuthority> authoritiesMapping(User user) {
-        return user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
+        return Set.of(new SimpleGrantedAuthority(user.getSpeciality().name()));
     }
 }

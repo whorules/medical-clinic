@@ -20,7 +20,6 @@ public class UserPrincipal extends LoggedUser {
     public static final String ACCOUNT_LOCKED = "accountLocked";
     public static final String CREDENTIALS_EXPIRED = "credentialsExpired";
     public static final String ENABLED = "enabled";
-    public static final String ROLE_NAME = "name";
 
     private String userName;
     private String password;

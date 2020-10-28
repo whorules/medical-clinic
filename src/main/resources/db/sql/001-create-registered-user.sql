@@ -3,7 +3,7 @@ set search_path = public;
 CREATE TABLE registered_user
 (
     id                      uuid                    NOT NULL,
-    name                    text                    NOT NULL,
+    first_name                    text                    NOT NULL,
     last_name               text                    NOT NULL,
     speciality              text                    NOT NULL,
     email                   text                    NOT NULL,

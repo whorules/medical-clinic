@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import ru.korovko.clinic.entity.Speciality;
 
 @Data
 @Accessors(chain = true)
@@ -14,10 +12,9 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class UserRegistrationRequest {
 
-    @NotBlank(message = "Имя пользователя должно быть заполнено") // TODO change
-    private String userName;
-
-    @NotBlank(message = "Пароль должен быть заполнен") //TODO change
-    @Size(min = 8, message = "Длина пароля должна быть больше 8 символов")
+    private String firstName;
+    private String lastName;
+    private Speciality speciality;
+    private String email; // TODO validation for password and email
     private String password;
 }

@@ -14,7 +14,6 @@ import ru.korovko.clinic.security.service.AuthenticationService;
 class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
-
     private final TokenProvider tokenProvider;
 
     @Override

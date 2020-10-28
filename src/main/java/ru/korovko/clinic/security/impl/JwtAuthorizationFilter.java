@@ -18,6 +18,7 @@ import java.io.IOException;
 @Slf4j
 @AllArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
+
     public static final String TOKEN_PREFIX = "Bearer ";
 
     private final TokenProvider tokenProvider;
