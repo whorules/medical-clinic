@@ -1,4 +1,4 @@
-package ru.korovko.clinic.security.rest;
+package ru.korovko.clinic.security.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;

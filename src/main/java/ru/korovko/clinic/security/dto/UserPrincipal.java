@@ -14,14 +14,14 @@ import java.util.Set;
 @Accessors(chain = true)
 public class UserPrincipal extends LoggedUser {
 
-    public static final String USER_NAME = "userName";
+    public static final String USER_EMAIL = "userEmail";
     public static final String ROLES = "roles";
     public static final String ACCOUNT_EXPIRED = "accountExpired";
     public static final String ACCOUNT_LOCKED = "accountLocked";
     public static final String CREDENTIALS_EXPIRED = "credentialsExpired";
     public static final String ENABLED = "enabled";
 
-    private String userName;
+    private String userEmail;
     private String password;
     private Set<SimpleGrantedAuthority> authorities;
     private boolean accountExpired;
@@ -42,7 +42,7 @@ public class UserPrincipal extends LoggedUser {
 
     @Override
     public String getUsername() {
-        return userName;
+        return userEmail;
     }
 
     @Override
@@ -62,6 +62,6 @@ public class UserPrincipal extends LoggedUser {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return true;
     }
 }

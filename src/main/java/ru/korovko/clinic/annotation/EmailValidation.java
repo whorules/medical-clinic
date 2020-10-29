@@ -1,6 +1,6 @@
 package ru.korovko.clinic.annotation;
 
-import ru.korovko.clinic.annotation.impl.PasswordValidationImpl;
+import ru.korovko.clinic.annotation.impl.EmailValidationImpl;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@Constraint(validatedBy = PasswordValidationImpl.class)
+@Constraint(validatedBy = EmailValidationImpl.class)
 public @interface EmailValidation {
 
     String message() default "Email is incorrect";

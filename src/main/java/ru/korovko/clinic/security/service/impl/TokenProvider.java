@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private static final String ACCESS_TOKEN_SUBJECT = "Access_Token";
-
     private final ApplicationSecurityProperties applicationSecurityProperties;
 
     public UserPrincipal getPrincipalFromToken(String token) {
@@ -36,8 +34,10 @@ public class TokenProvider {
                     .parseClaimsJws(token);
             Claims body = claimsJws.getBody();
             UserPrincipal userPrincipal = new UserPrincipal()
-                    .setUserName((String) body.get(UserPrincipal.USER_NAME))
-                    .setAuthorities(((List<String>) body.get(UserPrincipal.ROLES)).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet()))
+                    .setUserEmail((String) body.get(UserPrincipal.USER_EMAIL))
+                    .setAuthorities(((List<String>) body.get(UserPrincipal.ROLES)).stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toSet()))
                     .setAccountExpired((boolean) body.get(UserPrincipal.ACCOUNT_EXPIRED))
                     .setAccountLocked((boolean) body.get(UserPrincipal.ACCOUNT_LOCKED))
                     .setCredentialsExpired((boolean) body.get(UserPrincipal.CREDENTIALS_EXPIRED))
@@ -59,16 +59,15 @@ public class TokenProvider {
         }
     }
 
-    public String buildToken(String userName, UserPrincipal principal) {
+    public String buildToken(String userEmail, UserPrincipal principal) {
         return Jwts.builder()
-                .setIssuer(applicationSecurityProperties.getJwtIssuer())
-                .setAudience(applicationSecurityProperties.getJwtAudience())
-                .setSubject(ACCESS_TOKEN_SUBJECT) // todo change to user information?
+                .setSubject(userEmail)
                 .signWith(Keys.hmacShaKeyFor(applicationSecurityProperties.getJwtSecret().getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(applicationSecurityProperties.getJwtTimeToLive())))
                 .claim(LoggedUser.USER_ID, principal.getUserId())
-                .claim(UserPrincipal.USER_NAME, userName)
-                .claim(UserPrincipal.ROLES, principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .claim(UserPrincipal.ROLES, principal.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList()))
                 .claim(UserPrincipal.ACCOUNT_EXPIRED, principal.isAccountExpired())
                 .claim(UserPrincipal.ACCOUNT_LOCKED, principal.isAccountLocked())
                 .claim(UserPrincipal.CREDENTIALS_EXPIRED, principal.isCredentialsExpired())
