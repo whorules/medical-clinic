@@ -9,6 +9,6 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class AuthenticationRequest implements Serializable {
 
-    private String userName;
+    private String userEmail;
     private String password;
 }

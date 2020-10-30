@@ -15,7 +15,17 @@ spring:
     change-log: classpath:db/changelog.yml
   jackson:
     default-property-inclusion: NON_NULL
+  mail:
+    sender:
+      host: ${MAIL_HOST:smtp.mail.ru}
+      port: ${MAIL_PORT:465}
+      username: ${MAIL_USERNAME:medical.clinic@bk.ru}
+      password: ${MAIL_PASSWORD:Mypassword1}
+      protocol: ${MAIL_PROTOCOL:smtps}
+      topic: Your confirmation code
+      text: To activate your account, please enter this code %d
 app:
   security:
     jwtSecret: JDJhJDA4JGpUdXQ2eGdZTzE1RFpGU0lkMGpkYWVsZEtGdDhXSjh6YTRXbVptVjVVNjFCRkhXc0Q0em1X
     jwtTimeToLive: ${JWT_TIME_TO_LIVE:60}
+    acticationCodeLength: ${ACTIVATION_CODE_LENGTH:6}

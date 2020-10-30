@@ -32,11 +32,16 @@ public class AuthenticationController {
 
     private final UserRegistrationService userRegistrationService;
 
+    @PostMapping(value = "/register-start")
+    public RegistrationResponse registerUser(@Valid @RequestBody UserRegistrationRequest registrationRequest) {
+        return userRegistrationService.registerNewUser(registrationRequest);
+    }
+
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public AuthenticationResponse authenticate(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         return new AuthenticationResponse()
                 .setToken(authenticationService.authenticate(
-                        authenticationRequest.getUserName(), authenticationRequest.getPassword()));
+                        authenticationRequest.getUserEmail(), authenticationRequest.getPassword()));
     }
 
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,10 +51,5 @@ public class AuthenticationController {
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         return new CurrentUserDto().setUserName(principal.getUsername())
                 .setAuthorities(principal.getAuthorities().stream().map(o -> new SimpleGrantedAuthority(o.getAuthority())).collect(Collectors.toSet()));
-    }
-
-    @PostMapping(value = "/register")
-    public RegistrationResponse registerUser(@Valid @RequestBody UserRegistrationRequest registrationRequest) {
-        return userRegistrationService.registerNewUser(registrationRequest);
     }
 }
