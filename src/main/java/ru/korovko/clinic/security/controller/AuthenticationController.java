@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.korovko.clinic.security.dto.AuthenticationRequest;
 import ru.korovko.clinic.security.dto.AuthenticationResponse;
@@ -29,12 +30,16 @@ import java.util.stream.Collectors;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-
     private final UserRegistrationService userRegistrationService;
 
-    @PostMapping(value = "/register-start")
+    @PostMapping(value = "/register/start")
     public RegistrationResponse registerUser(@Valid @RequestBody UserRegistrationRequest registrationRequest) {
         return userRegistrationService.registerNewUser(registrationRequest);
+    }
+
+    @GetMapping("/register/confirm")
+    public RegistrationResponse registerConfirm(@RequestParam String token) {
+        return userRegistrationService.registerConfirm(token);
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)

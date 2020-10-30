@@ -6,4 +6,6 @@ import ru.korovko.clinic.security.dto.UserRegistrationRequest;
 public interface UserRegistrationService {
 
     RegistrationResponse registerNewUser(UserRegistrationRequest registrationRequest);
+
+    RegistrationResponse registerConfirm(String token);
 }
