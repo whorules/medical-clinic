@@ -38,19 +38,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(userAuthenticationEntryPoint())
-                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers(
                         "/auth/login/**",
-                        "/auth/register/**")
+                        "/auth/register/***")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthorizationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CustomExceptionTranslationFilter(userAuthenticationEntryPoint()), JwtAuthorizationFilter.class);
+                .addFilterBefore(new CustomExceptionTranslationFilter(userAuthenticationEntryPoint()), JwtAuthorizationFilter.class)
+                .exceptionHandling().authenticationEntryPoint(userAuthenticationEntryPoint());
     }
 
     @Override

@@ -16,7 +16,7 @@ public class WebConfiguration {
     public Docket docket() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("ru.vtb.community.level"))
+                .apis(RequestHandlerSelectors.basePackage("ru.korovko.clinic"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());

@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST, value = HttpStatus.BAD_REQUEST)
-public class UserAlreadyRegisteredException extends RuntimeException {
+public class IncorrectActivationTokenException extends RuntimeException {
 
-    public UserAlreadyRegisteredException(String message) {
+    public IncorrectActivationTokenException(String message) {
         super(message);
     }
 }

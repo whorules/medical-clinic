@@ -37,9 +37,9 @@ public class AuthenticationController {
         return userRegistrationService.registerNewUser(registrationRequest);
     }
 
-    @GetMapping("/register/confirm")
-    public RegistrationResponse registerConfirm(@RequestParam String token) {
-        return userRegistrationService.registerConfirm(token);
+    @GetMapping("/register/confirm") //todo make POST
+    public RegistrationResponse registerConfirm(@RequestParam String confirmationId) {
+        return userRegistrationService.registerConfirm(confirmationId);
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)

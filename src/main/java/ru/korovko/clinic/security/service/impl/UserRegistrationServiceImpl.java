@@ -3,10 +3,13 @@ package ru.korovko.clinic.security.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import ru.korovko.clinic.entity.User;
+import ru.korovko.clinic.exception.IncorrectActivationTokenException;
 import ru.korovko.clinic.exception.UserAlreadyRegisteredException;
 import ru.korovko.clinic.mapper.UserMapper;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
@@ -55,7 +58,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     public RegistrationResponse registerConfirm(String token) {
         Optional<User> optionalUser = userRepository.findByActivationToken(token);
         if (optionalUser.isEmpty()) {
-            log.warn("Activation token not found");
+            log.error("Activation token not found");
+            throw new IncorrectActivationTokenException("Activation token not found");
         } else {
             User user = optionalUser.get();
             user.setActivationToken(null);
