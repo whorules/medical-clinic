@@ -13,14 +13,14 @@ import ru.korovko.clinic.mapper.UserMapper;
 import ru.korovko.clinic.security.dto.RegistrationFinishRequest;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
 import ru.korovko.clinic.security.dto.RegistrationStartRequest;
+import ru.korovko.clinic.security.dto.RestoreFinishRequest;
+import ru.korovko.clinic.security.dto.RestoreStartRequest;
 import ru.korovko.clinic.security.repository.UserRepository;
 import ru.korovko.clinic.security.service.UserRegistrationService;
 import ru.korovko.clinic.service.MailService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Random;
-
-import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +32,14 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-    @Value("${spring.mail.sender.topic}")
+    @Value("${spring.mail.sender.registrationTopic}")
     private String confirmRegistrationTopic;
-    @Value("${spring.mail.sender.text}")
+    @Value("${spring.mail.sender.registrationText}")
     private String confirmRegistrationText;
+    @Value("${spring.mail.sender.restorationTopic}")
+    private String restorePasswordTopic;
+    @Value("${spring.mail.sender.restorationText}")
+    private String restorePasswordText;
 
     @Override
     @Transactional
@@ -70,6 +74,25 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         userRepository.save(user);
         return new RegistrationResponse()
                 .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
+    }
+    @Transactional
+    @Override
+    public RegistrationResponse restoreStart(RestoreStartRequest request) {
+        String email = request.getEmail();
+        User userByEmail = getUserByEmail(email);
+        userByEmail.setConfirmationCode(generateConfirmationCode());
+        User savedUser = userRepository.save(userByEmail);
+
+        mailService.sendMessage(email, restorePasswordTopic, String.format(restorePasswordText, savedUser.getConfirmationCode()));
+        return new RegistrationResponse()
+                .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
+    }
+
+    @Override
+    public RegistrationResponse restoreFinish(RestoreFinishRequest request) {
+        User userByEmail = getUserByEmail(request.getEmail());
+
+        return null;
     }
 
     @Transactional(readOnly = true)

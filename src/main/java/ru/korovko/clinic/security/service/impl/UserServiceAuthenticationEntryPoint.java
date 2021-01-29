@@ -27,5 +27,4 @@ public class UserServiceAuthenticationEntryPoint implements AuthenticationEntryP
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         IOUtils.write(objectMapper.writeValueAsString(response), response.getOutputStream(), StandardCharsets.UTF_8); // todo is that right?
     }
-
 }

@@ -1,7 +1,7 @@
 package ru.korovko.clinic.security.controller;
 
 import io.swagger.annotations.Api;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -17,8 +17,10 @@ import ru.korovko.clinic.security.dto.AuthenticationResponse;
 import ru.korovko.clinic.security.dto.CurrentUserDto;
 import ru.korovko.clinic.security.dto.RegistrationFinishRequest;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
-import ru.korovko.clinic.security.dto.UserPrincipal;
 import ru.korovko.clinic.security.dto.RegistrationStartRequest;
+import ru.korovko.clinic.security.dto.RestoreFinishRequest;
+import ru.korovko.clinic.security.dto.RestoreStartRequest;
+import ru.korovko.clinic.security.dto.UserPrincipal;
 import ru.korovko.clinic.security.service.AuthenticationService;
 import ru.korovko.clinic.security.service.UserRegistrationService;
 
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Api
 public class AuthenticationController {
 
@@ -44,6 +46,16 @@ public class AuthenticationController {
         return userRegistrationService.registerFinish(request);
     }
 
+    @PostMapping("/restore-start")
+    public RegistrationResponse restoreStart(@RequestBody RestoreStartRequest request) {
+        return userRegistrationService.restoreStart(request);
+    }
+
+    @PostMapping("/restore-finish")
+    public RegistrationResponse restoreFinish(@RequestBody RestoreFinishRequest request) {
+        return userRegistrationService.restoreFinish(request);
+    }
+
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public AuthenticationResponse authenticate(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         return new AuthenticationResponse().setToken(authenticationService.authenticate(authenticationRequest));
@@ -55,7 +67,8 @@ public class AuthenticationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         return new CurrentUserDto().setLogin(principal.getUsername())
-                .setAuthorities(principal.getAuthorities().stream().map(o -> new SimpleGrantedAuthority(o.getAuthority())).collect(Collectors.toSet()));
+                .setAuthorities(principal.getAuthorities().stream()
+                        .map(o -> new SimpleGrantedAuthority(o.getAuthority())).collect(Collectors.toSet()));
     }
 
     @PostMapping("/logout")
