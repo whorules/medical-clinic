@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ru.korovko.clinic.security.dto.AuthenticationRequest;
 import ru.korovko.clinic.security.dto.UserPrincipal;
 import ru.korovko.clinic.security.service.AuthenticationService;
 
@@ -17,10 +18,12 @@ class AuthenticationServiceImpl implements AuthenticationService {
     private final TokenProvider tokenProvider;
 
     @Override
-    public String authenticate(String userName, String password) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
+    public String authenticate(AuthenticationRequest authenticationRequest) {
+        String email = authenticationRequest.getUserEmail();
+        String password = authenticationRequest.getPassword();
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-        return tokenProvider.buildToken(userName, principal);
+        return tokenProvider.buildToken(email, principal);
     }
 }

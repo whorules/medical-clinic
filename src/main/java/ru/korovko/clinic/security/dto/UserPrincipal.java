@@ -1,18 +1,18 @@
 package ru.korovko.clinic.security.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class UserPrincipal extends LoggedUser {
+public class UserPrincipal implements UserDetails {
 
     public static final String USER_EMAIL = "userEmail";
     public static final String ROLES = "roles";
@@ -20,7 +20,9 @@ public class UserPrincipal extends LoggedUser {
     public static final String ACCOUNT_LOCKED = "accountLocked";
     public static final String CREDENTIALS_EXPIRED = "credentialsExpired";
     public static final String ENABLED = "enabled";
+    public static final String USER_ID = "userId";
 
+    private UUID userId;
     private String userEmail;
     private String password;
     private Set<SimpleGrantedAuthority> authorities;
@@ -62,6 +64,6 @@ public class UserPrincipal extends LoggedUser {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !enabled;
     }
 }

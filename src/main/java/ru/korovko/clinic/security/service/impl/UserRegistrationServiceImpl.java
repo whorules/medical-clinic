@@ -3,23 +3,24 @@ package ru.korovko.clinic.security.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import ru.korovko.clinic.entity.User;
-import ru.korovko.clinic.exception.IncorrectActivationTokenException;
+import ru.korovko.clinic.exception.IncorrectActivationCodeException;
 import ru.korovko.clinic.exception.UserAlreadyRegisteredException;
 import ru.korovko.clinic.mapper.UserMapper;
+import ru.korovko.clinic.security.dto.RegistrationFinishRequest;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
-import ru.korovko.clinic.security.dto.UserRegistrationRequest;
+import ru.korovko.clinic.security.dto.RegistrationStartRequest;
 import ru.korovko.clinic.security.repository.UserRepository;
 import ru.korovko.clinic.security.service.UserRegistrationService;
 import ru.korovko.clinic.service.MailService;
 
-import java.util.Optional;
-import java.util.UUID;
+import javax.persistence.EntityNotFoundException;
+import java.util.Random;
+
+import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
@@ -35,41 +36,51 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     private String confirmRegistrationTopic;
     @Value("${spring.mail.sender.text}")
     private String confirmRegistrationText;
-    @Value("${app.security.confirmRegistrationAddress}")
-    private String confirmRegistrationAddress;
 
     @Override
     @Transactional
-    public RegistrationResponse registerNewUser(UserRegistrationRequest registrationRequest) {
-        if (userRepository.findByEmail(registrationRequest.getEmail().trim()).isPresent()) {
+    public RegistrationResponse registerStart(RegistrationStartRequest request) {
+        if (userRepository.findByEmail(request.getEmail().trim()).isPresent()) {
             throw new UserAlreadyRegisteredException("User with such email has already been registered");
         }
-        User user = userMapper.toUser(registrationRequest);
-        user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-        user.setActivationToken(generateActivationToken());
+        User user = userMapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setConfirmationCode(generateConfirmationCode());
         User saved = userRepository.save(user);
+
         mailService.sendMessage(saved.getEmail(), confirmRegistrationTopic,
-                String.format(confirmRegistrationText, confirmRegistrationAddress + saved.getActivationToken()));
-        return new RegistrationResponse(RegistrationResponse.RegistrationStatus.SUCCESS); // todo success?
+                String.format(confirmRegistrationText, saved.getConfirmationCode()));
+
+        return new RegistrationResponse()
+                .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
 
     @Transactional
     @Override
-    public RegistrationResponse registerConfirm(String token) {
-        Optional<User> optionalUser = userRepository.findByActivationToken(token);
-        if (optionalUser.isEmpty()) {
-            log.error("Activation token not found");
-            throw new IncorrectActivationTokenException("Activation token not found");
-        } else {
-            User user = optionalUser.get();
-            user.setActivationToken(null);
-            user.setIsActivated(true);
-            userRepository.save(user);
+    public RegistrationResponse registerFinish(RegistrationFinishRequest request) {
+        User user = getUserByEmail(request.getEmail());
+        if (user.getConfirmationCode() == null || user.getIsActivated()) {
+            throw new UserAlreadyRegisteredException("User has already been registered");
         }
-        return new RegistrationResponse(RegistrationResponse.RegistrationStatus.SUCCESS);
+        if (!user.getConfirmationCode().equals(request.getConfirmationCode())) {
+            throw new IncorrectActivationCodeException("Activation code is incorrect");
+        }
+        user.setConfirmationCode(null);
+        user.setIsActivated(true);
+        userRepository.save(user);
+        return new RegistrationResponse()
+                .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
 
-    private String generateActivationToken() {
-        return UUID.randomUUID().toString();
+    @Transactional(readOnly = true)
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email.trim())
+                .orElseThrow(() -> new EntityNotFoundException("No user with such email"));
+    }
+
+    private Integer generateConfirmationCode() {
+        int minCode = 100_000;
+        int maxCode = 999_999;
+        return new Random().nextInt(maxCode - minCode) + minCode;
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import ru.korovko.clinic.configuration.props.ApplicationSecurityProperties;
-import ru.korovko.clinic.security.dto.LoggedUser;
 import ru.korovko.clinic.security.dto.UserPrincipal;
 import ru.korovko.clinic.security.exception.InvalidTokenDataException;
 
@@ -42,7 +41,7 @@ public class TokenProvider {
                     .setAccountLocked((boolean) body.get(UserPrincipal.ACCOUNT_LOCKED))
                     .setCredentialsExpired((boolean) body.get(UserPrincipal.CREDENTIALS_EXPIRED))
                     .setEnabled((boolean) body.get(UserPrincipal.ENABLED));
-            userPrincipal.setUserId(UUID.fromString((String) body.get(LoggedUser.USER_ID)));
+            userPrincipal.setUserId(UUID.fromString((String) body.get(UserPrincipal.USER_ID)));
             return userPrincipal;
         } catch (ExpiredJwtException e) {
             log.error(e.getMessage(), e);
@@ -64,7 +63,7 @@ public class TokenProvider {
                 .setSubject(userEmail)
                 .signWith(Keys.hmacShaKeyFor(applicationSecurityProperties.getJwtSecret().getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(applicationSecurityProperties.getJwtTimeToLive())))
-                .claim(LoggedUser.USER_ID, principal.getUserId())
+                .claim(UserPrincipal.USER_ID, principal.getUserId())
                 .claim(UserPrincipal.ROLES, principal.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))

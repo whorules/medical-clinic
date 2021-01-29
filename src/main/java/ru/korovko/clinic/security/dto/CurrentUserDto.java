@@ -10,6 +10,6 @@ import java.util.Set;
 @Accessors(chain = true)
 public class CurrentUserDto {
 
-    private String userName;
+    private String login;
     private Set<SimpleGrantedAuthority> authorities;
 }

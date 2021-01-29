@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegistrationRequest {
+public class RegistrationStartRequest {
 
     @NotBlank
     private String firstName;

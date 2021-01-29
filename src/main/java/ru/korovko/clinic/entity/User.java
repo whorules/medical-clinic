@@ -34,6 +34,6 @@ public class User {
     private Speciality speciality;
     private String email;
     private String password;
-    private String activationToken;
-    private Boolean isActivated;
+    private Integer confirmationCode;
+    private Boolean isActivated = false;
 }
