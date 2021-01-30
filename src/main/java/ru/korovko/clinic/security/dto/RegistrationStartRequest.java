@@ -9,12 +9,13 @@ import ru.korovko.clinic.annotation.PasswordValidation;
 import ru.korovko.clinic.entity.Speciality;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegistrationStartRequest {
+public class RegistrationStartRequest implements Serializable {
 
     @NotBlank
     private String firstName;

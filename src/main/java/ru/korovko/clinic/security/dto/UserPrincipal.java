@@ -14,6 +14,7 @@ import java.util.UUID;
 @Accessors(chain = true)
 public class UserPrincipal implements UserDetails {
 
+    public static final String SUBJECT = "Me";
     public static final String USER_EMAIL = "userEmail";
     public static final String ROLES = "roles";
     public static final String ACCOUNT_EXPIRED = "accountExpired";

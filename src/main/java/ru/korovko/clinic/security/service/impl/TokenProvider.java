@@ -19,6 +19,15 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static ru.korovko.clinic.security.dto.UserPrincipal.ACCOUNT_EXPIRED;
+import static ru.korovko.clinic.security.dto.UserPrincipal.ACCOUNT_LOCKED;
+import static ru.korovko.clinic.security.dto.UserPrincipal.CREDENTIALS_EXPIRED;
+import static ru.korovko.clinic.security.dto.UserPrincipal.ENABLED;
+import static ru.korovko.clinic.security.dto.UserPrincipal.ROLES;
+import static ru.korovko.clinic.security.dto.UserPrincipal.SUBJECT;
+import static ru.korovko.clinic.security.dto.UserPrincipal.USER_EMAIL;
+import static ru.korovko.clinic.security.dto.UserPrincipal.USER_ID;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -33,7 +42,7 @@ public class TokenProvider {
                     .parseClaimsJws(token);
             Claims body = claimsJws.getBody();
             UserPrincipal userPrincipal = new UserPrincipal()
-                    .setUserEmail((String) body.get(UserPrincipal.USER_EMAIL))
+                    .setUserEmail((String) body.get(USER_EMAIL))
                     .setAuthorities(((List<String>) body.get(UserPrincipal.ROLES)).stream()
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toSet()))
@@ -41,7 +50,7 @@ public class TokenProvider {
                     .setAccountLocked((boolean) body.get(UserPrincipal.ACCOUNT_LOCKED))
                     .setCredentialsExpired((boolean) body.get(UserPrincipal.CREDENTIALS_EXPIRED))
                     .setEnabled((boolean) body.get(UserPrincipal.ENABLED));
-            userPrincipal.setUserId(UUID.fromString((String) body.get(UserPrincipal.USER_ID)));
+            userPrincipal.setUserId(UUID.fromString((String) body.get(USER_ID)));
             return userPrincipal;
         } catch (ExpiredJwtException e) {
             log.error(e.getMessage(), e);
@@ -60,17 +69,18 @@ public class TokenProvider {
 
     public String buildToken(String userEmail, UserPrincipal principal) {
         return Jwts.builder()
-                .setSubject(userEmail)
+                .setSubject(SUBJECT)
                 .signWith(Keys.hmacShaKeyFor(applicationSecurityProperties.getJwtSecret().getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(applicationSecurityProperties.getJwtTimeToLive())))
-                .claim(UserPrincipal.USER_ID, principal.getUserId())
-                .claim(UserPrincipal.ROLES, principal.getAuthorities().stream()
+                .claim(USER_ID, principal.getUserId())
+                .claim(USER_EMAIL, userEmail)
+                .claim(ROLES, principal.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))
-                .claim(UserPrincipal.ACCOUNT_EXPIRED, principal.isAccountExpired())
-                .claim(UserPrincipal.ACCOUNT_LOCKED, principal.isAccountLocked())
-                .claim(UserPrincipal.CREDENTIALS_EXPIRED, principal.isCredentialsExpired())
-                .claim(UserPrincipal.ENABLED, principal.isEnabled())
+                .claim(ACCOUNT_EXPIRED, principal.isAccountExpired())
+                .claim(ACCOUNT_LOCKED, principal.isAccountLocked())
+                .claim(CREDENTIALS_EXPIRED, principal.isCredentialsExpired())
+                .claim(ENABLED, principal.isEnabled())
                 .compact();
     }
 }
