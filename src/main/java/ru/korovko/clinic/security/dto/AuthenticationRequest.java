@@ -3,11 +3,9 @@ package ru.korovko.clinic.security.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
-
 @Data
 @Accessors(chain = true)
-public class AuthenticationRequest implements Serializable {
+public class AuthenticationRequest {
 
     private String userEmail;
     private String password;

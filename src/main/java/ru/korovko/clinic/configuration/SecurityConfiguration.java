@@ -28,7 +28,7 @@ import ru.korovko.clinic.security.service.impl.UserServiceAuthenticationEntryPoi
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private static final int BCRYPT_PASSWORD_STRENGTH = 8; // TODO what is this?
+    private static final int BCRYPT_PASSWORD_STRENGTH = 8;
 
     private final CustomUserDetailsService customUserDetailsService;
     private final TokenProvider tokenProvider;

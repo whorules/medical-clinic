@@ -5,11 +5,9 @@ import lombok.experimental.Accessors;
 import ru.korovko.clinic.annotation.EmailValidation;
 import ru.korovko.clinic.annotation.PasswordValidation;
 
-import java.io.Serializable;
-
 @Data
 @Accessors(chain = true)
-public class RestoreFinishRequest implements Serializable {
+public class RestoreFinishRequest {
 
     @EmailValidation
     private String email;
