@@ -36,8 +36,8 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserRegistrationService userRegistrationService;
 
-    @PostMapping(value = "/register-start")
-    public RegistrationResponse registerUser(@Valid @RequestBody RegistrationStartRequest request) {
+    @PostMapping(value = "/register-start", produces = MediaType.APPLICATION_JSON_VALUE)
+    public RegistrationResponse registerUser(@RequestBody RegistrationStartRequest request) {
         return userRegistrationService.registerStart(request);
     }
 

@@ -7,6 +7,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AuthenticationRequest {
 
-    private String userEmail;
+    private String email;
     private String password;
 }

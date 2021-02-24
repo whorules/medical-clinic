@@ -16,7 +16,7 @@ public class RegistrationStartRequest {
     private String firstName;
     @NotBlank
     private String lastName;
-    private Speciality speciality;
+    private Speciality specialty;
     @NotBlank
     @EmailValidation
     private String email;

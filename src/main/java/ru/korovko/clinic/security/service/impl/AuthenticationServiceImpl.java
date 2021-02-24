@@ -19,7 +19,7 @@ class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String authenticate(AuthenticationRequest authenticationRequest) {
-        String email = authenticationRequest.getUserEmail();
+        String email = authenticationRequest.getEmail();
         String password = authenticationRequest.getPassword();
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -75,6 +75,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         return new RegistrationResponse()
                 .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
+
     @Transactional
     @Override
     public RegistrationResponse restoreStart(RestoreStartRequest request) {
@@ -89,7 +90,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public RegistrationResponse restoreFinish(RestoreFinishRequest request) {
+    public RegistrationResponse restoreFinish(RestoreFinishRequest request) { // todo finish
         User userByEmail = getUserByEmail(request.getEmail());
         if (!request.getPassword().equals(request.getPasswordConfirm())) {
             throw new RuntimeException("Passwords are not the same");
