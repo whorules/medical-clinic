@@ -12,14 +12,15 @@ import javax.validation.constraints.NotBlank;
 @Accessors(chain = true)
 public class RegistrationStartRequest {
 
-    @NotBlank
+    @NotBlank(message = "Should not be null")
     private String firstName;
-    @NotBlank
+    @NotBlank(message = "Should not be null")
     private String lastName;
     private Speciality specialty;
-    @NotBlank
+    @NotBlank(message = "Should not be null")
     @EmailValidation
     private String email;
+    @NotBlank(message = "Should not be null")
     @PasswordValidation
     private String password;
 }

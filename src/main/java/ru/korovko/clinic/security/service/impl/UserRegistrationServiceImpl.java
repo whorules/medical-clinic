@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.korovko.clinic.entity.Session;
 import ru.korovko.clinic.entity.User;
 import ru.korovko.clinic.exception.IncorrectActivationCodeException;
 import ru.korovko.clinic.exception.UserAlreadyRegisteredException;
@@ -18,9 +19,13 @@ import ru.korovko.clinic.security.dto.RestoreStartRequest;
 import ru.korovko.clinic.security.repository.UserRepository;
 import ru.korovko.clinic.security.service.UserRegistrationService;
 import ru.korovko.clinic.service.MailService;
+import ru.korovko.clinic.service.SessionService;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +33,7 @@ import java.util.Random;
 public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     private final MailService mailService;
+    private final SessionService sessionService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
@@ -44,25 +50,34 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Override
     @Transactional
     public RegistrationResponse registerStart(RegistrationStartRequest request) {
-        if (userRepository.findByEmail(request.getEmail().trim()).isPresent()) {
-            throw new UserAlreadyRegisteredException("User with such email has already been registered");
+        User user;
+        Optional<User> byEmail = userRepository.findByEmail(request.getEmail());
+        if (byEmail.isPresent()) {
+            user = byEmail.get();
+            if (user.getIsActivated()) {
+                throw new UserAlreadyRegisteredException("User with such email has already been registered");
+            }
+            userMapper.toUser(user, request);
+        } else {
+            user = userMapper.toUser(request);
         }
-        User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setConfirmationCode(generateConfirmationCode());
         User saved = userRepository.save(user);
 
-        mailService.sendMessage(saved.getEmail(), confirmRegistrationTopic,
-                String.format(confirmRegistrationText, saved.getConfirmationCode()));
-
+//        mailService.sendMessage(saved.getEmail(), confirmRegistrationTopic, String.format(confirmRegistrationText, saved.getConfirmationCode()));  // TODO uncomment in prod
         return new RegistrationResponse()
                 .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
 
     @Transactional
     @Override
-    public RegistrationResponse registerFinish(RegistrationFinishRequest request) {
-        User user = getUserByEmail(request.getEmail());
+    public RegistrationResponse registerFinish(RegistrationFinishRequest request, String sessionId) {
+        Session userSession = sessionService.getById(UUID.fromString(sessionId));
+        if (LocalDateTime.now().isAfter(userSession.getExpiresAt())) {
+            throw new RuntimeException("Session with id " + sessionId + " expired");
+        }
+        User user = userSession.getUser();
         if (user.getConfirmationCode() == null || user.getIsActivated()) {
             throw new UserAlreadyRegisteredException("User has already been registered");
         }
@@ -101,7 +116,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Transactional(readOnly = true)
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email.trim())
-                .orElseThrow(() -> new EntityNotFoundException("No user with such email"));
+                .orElseThrow(() -> new EntityNotFoundException("No user with such email: " + email));
     }
 
     private Integer generateConfirmationCode() {

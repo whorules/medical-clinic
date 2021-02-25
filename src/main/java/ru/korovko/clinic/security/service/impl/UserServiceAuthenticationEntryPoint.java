@@ -25,6 +25,6 @@ public class UserServiceAuthenticationEntryPoint implements AuthenticationEntryP
         String message = authException.getMessage();
         log.error("Authentication failed. Message: " + message, authException);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        IOUtils.write(objectMapper.writeValueAsString(response), response.getOutputStream(), StandardCharsets.UTF_8); // todo is that right?
+        IOUtils.write(objectMapper.writeValueAsString(response), response.getOutputStream(), StandardCharsets.UTF_8);
     }
 }

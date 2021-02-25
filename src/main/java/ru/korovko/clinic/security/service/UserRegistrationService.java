@@ -10,7 +10,7 @@ public interface UserRegistrationService {
 
     RegistrationResponse registerStart(RegistrationStartRequest request);
 
-    RegistrationResponse registerFinish(RegistrationFinishRequest request);
+    RegistrationResponse registerFinish(RegistrationFinishRequest request, String sessionId);
 
     RegistrationResponse restoreStart(RestoreStartRequest request);
 

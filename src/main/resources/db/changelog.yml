@@ -8,3 +8,12 @@ databaseChangeLog:
             path: sql/001-create-registered-user.sql
             enchoding: utf8
             relativeToChangelogFile: true
+  - changeSet:
+      runAlways: false
+      id: 20210225_02
+      author: Alexey Korovko
+      changes:
+        - sqlFile:
+            path: sql/002-create-user-session.sql
+            enchoding: utf8
+            relativeToChangelogFile: true
