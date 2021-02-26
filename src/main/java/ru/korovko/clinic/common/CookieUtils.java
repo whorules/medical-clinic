@@ -13,7 +13,7 @@ public class CookieUtils {
         return cookie;
     }
 
-    public Cookie deleteSessionCookie(String cookieName) {
+    public Cookie deleteCookie(String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setPath("/");
         cookie.setMaxAge(0);

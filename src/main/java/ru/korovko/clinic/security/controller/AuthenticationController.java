@@ -69,7 +69,9 @@ public class AuthenticationController {
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public AuthenticationResponse authenticate(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
-        return new AuthenticationResponse().setToken(authenticationService.authenticate(authenticationRequest));
+        return new AuthenticationResponse()
+                .setStatus(AuthenticationResponse.AuthenticationStatus.SUCCESS)
+                .setToken(authenticationService.authenticate(authenticationRequest));
     }
 
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)

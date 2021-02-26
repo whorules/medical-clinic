@@ -7,5 +7,12 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AuthenticationResponse {
 
+    private AuthenticationStatus status;
     private String token;
+    private String message;
+
+    public enum AuthenticationStatus {
+
+        SUCCESS, FAIL
+    }
 }

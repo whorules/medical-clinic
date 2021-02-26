@@ -107,9 +107,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     @Override
     public RegistrationResponse restoreFinish(RestoreFinishRequest request) { // todo finish
         User userByEmail = getUserByEmail(request.getEmail());
-        if (!request.getPassword().equals(request.getPasswordConfirm())) {
-            throw new RuntimeException("Passwords are not the same");
-        }
+
         return null;
     }
 

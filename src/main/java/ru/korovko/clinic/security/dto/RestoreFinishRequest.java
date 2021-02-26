@@ -14,6 +14,4 @@ public class RestoreFinishRequest {
     private String confirmationCode;
     @PasswordValidation
     private String password;
-    @PasswordValidation
-    private String passwordConfirm;
 }
