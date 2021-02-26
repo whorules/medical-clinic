@@ -57,15 +57,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/csrf",
                 "/error",
                 "/favicon.ico",
-                "/v2/api-docs",
+                "/v2/api-docs**",
                 "/configuration/ui",
                 "/swagger-resources",
                 "/configuration/security",
                 "/swagger-ui.html",
                 "/webjars/**",
                 "/swagger-resources/configuration/ui",
-                "/swagger-ui.html",
-                "/swagger-resources/configuration/security");
+                "/swagger-resources/configuration/security",
+                "/");
     }
 
     @Override
