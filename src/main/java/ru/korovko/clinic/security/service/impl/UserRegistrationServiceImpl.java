@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.korovko.clinic.entity.Session;
 import ru.korovko.clinic.entity.User;
-import ru.korovko.clinic.exception.IncorrectActivationCodeException;
+import ru.korovko.clinic.exception.IncorrectConfirmationCodeException;
 import ru.korovko.clinic.exception.UserAlreadyRegisteredException;
 import ru.korovko.clinic.mapper.UserMapper;
 import ru.korovko.clinic.security.dto.RegistrationFinishRequest;
@@ -26,6 +26,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+
+import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
@@ -72,8 +74,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     @Transactional
     @Override
-    public RegistrationResponse registerFinish(RegistrationFinishRequest request, String sessionId) {
-        Session userSession = sessionService.getById(UUID.fromString(sessionId));
+    public RegistrationResponse registerFinish(RegistrationFinishRequest request, UUID sessionId) {
+        Session userSession = sessionService.getById(sessionId);
         if (LocalDateTime.now().isAfter(userSession.getExpiresAt())) {
             throw new RuntimeException("Session with id " + sessionId + " expired");
         }
@@ -82,7 +84,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             throw new UserAlreadyRegisteredException("User has already been registered");
         }
         if (!user.getConfirmationCode().equals(request.getConfirmationCode())) {
-            throw new IncorrectActivationCodeException("Activation code is incorrect");
+            throw new IncorrectConfirmationCodeException("Confirmation code is incorrect");
         }
         user.setConfirmationCode(null);
         user.setIsActivated(true);
@@ -99,16 +101,28 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         userByEmail.setConfirmationCode(generateConfirmationCode());
         User savedUser = userRepository.save(userByEmail);
 
-        mailService.sendMessage(email, restorePasswordTopic, String.format(restorePasswordText, savedUser.getConfirmationCode()));
+//        mailService.sendMessage(email, restorePasswordTopic, String.format(restorePasswordText, savedUser.getConfirmationCode()));
         return new RegistrationResponse()
                 .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
 
     @Override
-    public RegistrationResponse restoreFinish(RestoreFinishRequest request) { // todo finish
-        User userByEmail = getUserByEmail(request.getEmail());
-
-        return null;
+    public RegistrationResponse restoreFinish(RestoreFinishRequest request, UUID sessionId) {
+        Session userSession = sessionService.getById(sessionId);
+        if (LocalDateTime.now().isAfter(userSession.getExpiresAt())) {
+            throw new RuntimeException("Session with id " + sessionId + " expired");
+        }
+        User user = userSession.getUser();
+        if (isNull(user.getConfirmationCode())) {
+            throw new RuntimeException("User doesn't have confirmation code");
+        }
+        if (!user.getConfirmationCode().equals(request.getConfirmationCode())) {
+            throw new IncorrectConfirmationCodeException("Confirmation code is incorrect");
+        }
+        user.setConfirmationCode(null);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.save(user);
+        return new RegistrationResponse().setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
 
     @Transactional(readOnly = true)

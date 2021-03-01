@@ -41,7 +41,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/auth/login/**",
                         "/auth/register-start",
-                        "/auth/register-finish")
+                        "/auth/register-finish",
+                        "/auth/restore-start",
+                        "/auth/restore-finish")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()

@@ -29,8 +29,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .setMessage(message);
     }
 
-    @ExceptionHandler(IncorrectActivationCodeException.class)
-    public RegistrationResponse handleIncorrectActivationCode(IncorrectActivationCodeException ex) {
+    @ExceptionHandler(IncorrectConfirmationCodeException.class)
+    public RegistrationResponse handleIncorrectActivationCode(IncorrectConfirmationCodeException ex) {
         String message = ex.getMessage();
         return new RegistrationResponse()
                 .setRegistrationStatus(RegistrationResponse.RegistrationStatus.FAIL)

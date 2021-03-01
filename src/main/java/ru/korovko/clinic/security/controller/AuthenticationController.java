@@ -29,6 +29,7 @@ import ru.korovko.clinic.service.impl.SessionServiceImpl;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -53,18 +54,22 @@ public class AuthenticationController {
 
     @PostMapping("/register-finish")
     public RegistrationResponse registerFinish(@RequestBody RegistrationFinishRequest request,
-                                                @CookieValue(SESSION_ID) String sessionId) {
+                                                @CookieValue(SESSION_ID) UUID sessionId) {
         return userRegistrationService.registerFinish(request, sessionId);
     }
 
     @PostMapping("/restore-start")
-    public RegistrationResponse restoreStart(@RequestBody RestoreStartRequest request) {
-        return userRegistrationService.restoreStart(request);
+    public RegistrationResponse restoreStart(@RequestBody @Valid RestoreStartRequest request,
+                                             HttpServletResponse response) {
+        RegistrationResponse registrationResponse = userRegistrationService.restoreStart(request);
+        response.addCookie(CookieUtils.createCookie(SESSION_ID, sessionService.create(request.getEmail())));
+        return registrationResponse;
     }
 
     @PostMapping("/restore-finish")
-    public RegistrationResponse restoreFinish(@RequestBody RestoreFinishRequest request) {
-        return userRegistrationService.restoreFinish(request);
+    public RegistrationResponse restoreFinish(@RequestBody RestoreFinishRequest request,
+                                              @CookieValue(SESSION_ID) UUID sessionId) {
+        return userRegistrationService.restoreFinish(request, sessionId);
     }
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)

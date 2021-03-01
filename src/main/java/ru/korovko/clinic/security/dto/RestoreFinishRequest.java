@@ -2,16 +2,13 @@ package ru.korovko.clinic.security.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.korovko.clinic.annotation.EmailValidation;
 import ru.korovko.clinic.annotation.PasswordValidation;
 
 @Data
 @Accessors(chain = true)
 public class RestoreFinishRequest {
 
-    @EmailValidation
-    private String email;
-    private String confirmationCode;
+    private Integer confirmationCode;
     @PasswordValidation
     private String password;
 }
