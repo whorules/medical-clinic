@@ -1,8 +1,6 @@
 package ru.korovko.clinic.security.controller;
 
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,7 +33,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Api
 public class AuthenticationController {
 
     private static final String SESSION_ID = "sessionId";
@@ -44,7 +41,7 @@ public class AuthenticationController {
     private final UserRegistrationService userRegistrationService;
     private final SessionServiceImpl sessionService;
 
-    @PostMapping(value = "/register-start", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/register-start")
     public RegistrationResponse registerUser(@RequestBody @Valid RegistrationStartRequest request,
                                              HttpServletResponse response) {
         RegistrationResponse registrationResponse = userRegistrationService.registerStart(request);
@@ -72,15 +69,15 @@ public class AuthenticationController {
         return userRegistrationService.restoreFinish(request, sessionId);
     }
 
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login")
     public AuthenticationResponse authenticate(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         return new AuthenticationResponse()
                 .setStatus(AuthenticationResponse.AuthenticationStatus.SUCCESS)
                 .setToken(authenticationService.authenticate(authenticationRequest));
     }
 
-    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @GetMapping(value = "/me")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN'")
     public CurrentUserDto getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();

@@ -1,6 +1,6 @@
-package ru.korovko.clinic.annotation;
+package ru.korovko.clinic.validation;
 
-import ru.korovko.clinic.annotation.impl.PasswordValidationImpl;
+import ru.korovko.clinic.validation.impl.EmailValidationImpl;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,10 +11,10 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@Constraint(validatedBy = PasswordValidationImpl.class)
-public @interface PasswordValidation {
+@Constraint(validatedBy = EmailValidationImpl.class)
+public @interface EmailValidation {
 
-    String message() default "Password must contain at least 8 symbols, included digits, upper and lower case letters";
+    String message() default "Has incorrect format";
 
     Class<?>[] groups() default {};
 

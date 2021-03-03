@@ -2,8 +2,8 @@ package ru.korovko.clinic.security.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.korovko.clinic.annotation.EmailValidation;
-import ru.korovko.clinic.annotation.PasswordValidation;
+import ru.korovko.clinic.validation.EmailValidation;
+import ru.korovko.clinic.validation.PasswordValidation;
 import ru.korovko.clinic.entity.Speciality;
 
 import javax.validation.constraints.NotBlank;

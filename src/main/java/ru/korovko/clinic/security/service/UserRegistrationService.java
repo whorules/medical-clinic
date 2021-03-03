@@ -15,5 +15,6 @@ public interface UserRegistrationService {
     RegistrationResponse registerFinish(RegistrationFinishRequest request, UUID sessionId);
 
     RegistrationResponse restoreStart(RestoreStartRequest request);
+
     RegistrationResponse restoreFinish(RestoreFinishRequest request, UUID sessionId);
 }

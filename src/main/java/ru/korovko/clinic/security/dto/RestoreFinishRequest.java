@@ -2,7 +2,7 @@ package ru.korovko.clinic.security.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import ru.korovko.clinic.annotation.PasswordValidation;
+import ru.korovko.clinic.validation.PasswordValidation;
 
 @Data
 @Accessors(chain = true)

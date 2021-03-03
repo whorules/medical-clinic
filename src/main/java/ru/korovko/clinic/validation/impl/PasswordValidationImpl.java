@@ -1,7 +1,7 @@
-package ru.korovko.clinic.annotation.impl;
+package ru.korovko.clinic.validation.impl;
 
 import org.springframework.util.StringUtils;
-import ru.korovko.clinic.annotation.PasswordValidation;
+import ru.korovko.clinic.validation.PasswordValidation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

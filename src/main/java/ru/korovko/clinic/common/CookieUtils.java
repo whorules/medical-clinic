@@ -9,6 +9,7 @@ public class CookieUtils {
 
     public Cookie createCookie(String cookieName, String cookieValue) {
         Cookie cookie = new Cookie(cookieName, cookieValue);
+        cookie.setHttpOnly(true);
         cookie.setPath("/");
         return cookie;
     }

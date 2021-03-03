@@ -32,7 +32,6 @@ public class UserPrincipal implements UserDetails {
     private boolean credentialsExpired;
     private boolean enabled;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

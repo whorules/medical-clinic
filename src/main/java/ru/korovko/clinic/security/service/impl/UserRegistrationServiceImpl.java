@@ -67,7 +67,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         user.setConfirmationCode(generateConfirmationCode());
         User saved = userRepository.save(user);
 
-//        mailService.sendMessage(saved.getEmail(), confirmRegistrationTopic, String.format(confirmRegistrationText, saved.getConfirmationCode()));  // TODO uncomment in prod
+        mailService.sendMessage(saved.getEmail(), confirmRegistrationTopic, String.format(confirmRegistrationText, saved.getConfirmationCode()));
         return new RegistrationResponse()
                 .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
@@ -101,7 +101,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         userByEmail.setConfirmationCode(generateConfirmationCode());
         User savedUser = userRepository.save(userByEmail);
 
-//        mailService.sendMessage(email, restorePasswordTopic, String.format(restorePasswordText, savedUser.getConfirmationCode()));
+        mailService.sendMessage(email, restorePasswordTopic, String.format(restorePasswordText, savedUser.getConfirmationCode()));
         return new RegistrationResponse()
                 .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }

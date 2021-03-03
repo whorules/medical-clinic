@@ -1,7 +1,7 @@
-package ru.korovko.clinic.annotation.impl;
+package ru.korovko.clinic.validation.impl;
 
 import org.apache.commons.validator.routines.EmailValidator;
-import ru.korovko.clinic.annotation.EmailValidation;
+import ru.korovko.clinic.validation.EmailValidation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
