@@ -30,6 +30,7 @@ import java.util.UUID;
 import static java.util.Objects.isNull;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class UserRegistrationServiceImpl implements UserRegistrationService {
@@ -50,7 +51,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     private String restorePasswordText;
 
     @Override
-    @Transactional
     public RegistrationResponse registerStart(RegistrationStartRequest request) {
         User user;
         Optional<User> byEmail = userRepository.findByEmail(request.getEmail());
@@ -72,7 +72,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
                 .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
 
-    @Transactional
     @Override
     public RegistrationResponse registerFinish(RegistrationFinishRequest request, UUID sessionId) {
         Session userSession = sessionService.getById(sessionId);
@@ -93,7 +92,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
                 .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
 
-    @Transactional
     @Override
     public RegistrationResponse restoreStart(RestoreStartRequest request) {
         String email = request.getEmail();
