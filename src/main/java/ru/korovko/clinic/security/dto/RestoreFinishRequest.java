@@ -9,8 +9,8 @@ import ru.korovko.clinic.validation.PasswordValidation;
 @Accessors(chain = true)
 public class RestoreFinishRequest {
 
-    @ApiModelProperty(example = "123456")
-    private Integer confirmationCode;
+    @ApiModelProperty(example = "6644e0b3-78c0-41bc-b639-7e8d42fec2cf")
+    private String confirmationCode;
 
     @PasswordValidation
     @ApiModelProperty(example = "YourPassword1.")

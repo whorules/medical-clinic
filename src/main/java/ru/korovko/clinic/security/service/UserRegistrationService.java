@@ -6,15 +6,13 @@ import ru.korovko.clinic.security.dto.RegistrationStartRequest;
 import ru.korovko.clinic.security.dto.RestoreFinishRequest;
 import ru.korovko.clinic.security.dto.RestoreStartRequest;
 
-import java.util.UUID;
-
 public interface UserRegistrationService {
 
     RegistrationResponse registerStart(RegistrationStartRequest request);
 
-    RegistrationResponse registerFinish(RegistrationFinishRequest request, UUID sessionId);
+    RegistrationResponse registerFinish(RegistrationFinishRequest request);
 
     RegistrationResponse restoreStart(RestoreStartRequest request);
 
-    RegistrationResponse restoreFinish(RestoreFinishRequest request, UUID sessionId);
+    RegistrationResponse restoreFinish(RestoreFinishRequest request);
 }

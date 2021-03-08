@@ -5,13 +5,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.korovko.clinic.common.CookieUtils;
 import ru.korovko.clinic.security.dto.AuthenticationRequest;
 import ru.korovko.clinic.security.dto.AuthenticationResponse;
 import ru.korovko.clinic.security.dto.CurrentUserDto;
@@ -23,11 +21,8 @@ import ru.korovko.clinic.security.dto.RestoreStartRequest;
 import ru.korovko.clinic.security.dto.UserPrincipal;
 import ru.korovko.clinic.security.service.AuthenticationService;
 import ru.korovko.clinic.security.service.UserRegistrationService;
-import ru.korovko.clinic.service.impl.SessionServiceImpl;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,38 +30,27 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    private static final String SESSION_ID = "sessionId";
-
     private final AuthenticationService authenticationService;
     private final UserRegistrationService userRegistrationService;
-    private final SessionServiceImpl sessionService;
 
     @PostMapping(value = "/register-start")
-    public RegistrationResponse registerUser(@RequestBody @Valid RegistrationStartRequest request,
-                                             HttpServletResponse response) {
-        RegistrationResponse registrationResponse = userRegistrationService.registerStart(request);
-        response.addCookie(CookieUtils.createCookie(SESSION_ID, sessionService.create(request.getEmail())));
-        return registrationResponse;
+    public RegistrationResponse registerUser(@RequestBody @Valid RegistrationStartRequest request) {
+        return userRegistrationService.registerStart(request);
     }
 
     @PostMapping("/register-finish")
-    public RegistrationResponse registerFinish(@RequestBody RegistrationFinishRequest request,
-                                                @CookieValue(SESSION_ID) UUID sessionId) {
-        return userRegistrationService.registerFinish(request, sessionId);
+    public RegistrationResponse registerFinish(@RequestBody RegistrationFinishRequest request) {
+        return userRegistrationService.registerFinish(request);
     }
 
     @PostMapping("/restore-start")
-    public RegistrationResponse restoreStart(@RequestBody @Valid RestoreStartRequest request,
-                                             HttpServletResponse response) {
-        RegistrationResponse registrationResponse = userRegistrationService.restoreStart(request);
-        response.addCookie(CookieUtils.createCookie(SESSION_ID, sessionService.create(request.getEmail())));
-        return registrationResponse;
+    public RegistrationResponse restoreStart(@RequestBody @Valid RestoreStartRequest request) {
+        return userRegistrationService.restoreStart(request);
     }
 
     @PostMapping("/restore-finish")
-    public RegistrationResponse restoreFinish(@RequestBody RestoreFinishRequest request,
-                                              @CookieValue(SESSION_ID) UUID sessionId) {
-        return userRegistrationService.restoreFinish(request, sessionId);
+    public RegistrationResponse restoreFinish(@RequestBody RestoreFinishRequest request) {
+        return userRegistrationService.restoreFinish(request);
     }
 
     @PostMapping(value = "/login")
