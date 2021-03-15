@@ -10,7 +10,6 @@ spring:
     platform: postgresql
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate.ddl-auto: none
   liquibase:
     change-log: classpath:db/changelog.yml
   jackson:
@@ -24,7 +23,7 @@ spring:
       protocol: ${MAIL_PROTOCOL:smtps}
       registrationTopic: Your confirmation code
       registrationText: To activate your account, please follow <a href="%s">this link</a>
-      registrationLink: http://localhost:4000/register-finish?confirmationCode=%s
+      registrationLink: http://localhost:8080/auth/register-finish?confirmationCode=%s
       restorationTopic: Password restoration
       restorationLink: http://localhost:4000/restore-finish?confirmationCode=%s
       restorationText: To restore your password, please enter this code %s

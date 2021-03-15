@@ -10,7 +10,6 @@ import ru.korovko.clinic.entity.User;
 import ru.korovko.clinic.exception.IncorrectConfirmationCodeException;
 import ru.korovko.clinic.exception.UserAlreadyRegisteredException;
 import ru.korovko.clinic.mapper.UserMapper;
-import ru.korovko.clinic.security.dto.RegistrationFinishRequest;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
 import ru.korovko.clinic.security.dto.RegistrationStartRequest;
 import ru.korovko.clinic.security.dto.RestoreFinishRequest;
@@ -64,13 +63,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public RegistrationResponse registerFinish(RegistrationFinishRequest request) {
-        String confirmationCode = request.getConfirmationCode();
-        Optional<User> optionalUser = userRepository.findByConfirmationCode(confirmationCode);
-        if (optionalUser.isEmpty()) {
-            throw new EntityNotFoundException("No user with such confirmation code: " + confirmationCode);
-        }
-        User user = optionalUser.get();
+    public RegistrationResponse registerFinish(String confirmationCode) {
+        User user = userRepository.findByConfirmationCode(confirmationCode)
+                .orElseThrow(() -> new EntityNotFoundException("No user with such confirmation code: " + confirmationCode));
         if (!user.getConfirmationCode().equals(confirmationCode)) {
             throw new IncorrectConfirmationCodeException("Confirmation code is incorrect");
         }

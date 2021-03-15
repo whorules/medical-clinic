@@ -1,6 +1,7 @@
 package ru.korovko.clinic.security.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,11 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 import ru.korovko.clinic.security.dto.AuthenticationRequest;
 import ru.korovko.clinic.security.dto.AuthenticationResponse;
 import ru.korovko.clinic.security.dto.CurrentUserDto;
-import ru.korovko.clinic.security.dto.RegistrationFinishRequest;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
 import ru.korovko.clinic.security.dto.RegistrationStartRequest;
 import ru.korovko.clinic.security.dto.RestoreFinishRequest;
@@ -38,9 +40,19 @@ public class AuthenticationController {
         return userRegistrationService.registerStart(request);
     }
 
-    @PostMapping("/register-finish")
-    public RegistrationResponse registerFinish(@RequestBody RegistrationFinishRequest request) {
-        return userRegistrationService.registerFinish(request);
+    @GetMapping("/register-finish")
+    public RedirectView registerFinish(@RequestParam String confirmationCode) {
+        RegistrationResponse registrationResponse = userRegistrationService.registerFinish(confirmationCode);
+
+        RedirectView redirectView = new RedirectView();
+        redirectView.setStatusCode(HttpStatus.PERMANENT_REDIRECT);
+
+        if (RegistrationResponse.RegistrationStatus.SUCCESS == registrationResponse.getRegistrationStatus()) {
+            redirectView.setUrl("http://localhost:4000");
+            return redirectView;
+        }
+        redirectView.setUrl("");
+        return redirectView;
     }
 
     @PostMapping("/restore-start")
