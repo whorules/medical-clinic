@@ -1,6 +1,7 @@
 package ru.korovko.clinic.security.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,6 @@ import ru.korovko.clinic.security.dto.AuthenticationResponse;
 import ru.korovko.clinic.security.dto.CurrentUserDto;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
 import ru.korovko.clinic.security.dto.RegistrationStartRequest;
-import ru.korovko.clinic.security.dto.RestoreFinishRequest;
 import ru.korovko.clinic.security.dto.RestoreStartRequest;
 import ru.korovko.clinic.security.dto.UserPrincipal;
 import ru.korovko.clinic.security.service.AuthenticationService;
@@ -35,6 +35,11 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserRegistrationService userRegistrationService;
 
+    @Value("${spring.redirect.registration}")
+    private String registrationRedirectAddress;
+    @Value("${spring.redirect.passwordRestoration}")
+    private String passwordRestorationRedirectAddress;
+
     @PostMapping(value = "/register-start")
     public RegistrationResponse registerUser(@RequestBody @Valid RegistrationStartRequest request) {
         return userRegistrationService.registerStart(request);
@@ -42,16 +47,12 @@ public class AuthenticationController {
 
     @GetMapping("/register-finish")
     public RedirectView registerFinish(@RequestParam String confirmationCode) {
-        RegistrationResponse registrationResponse = userRegistrationService.registerFinish(confirmationCode);
+        userRegistrationService.registerFinish(confirmationCode);
 
         RedirectView redirectView = new RedirectView();
         redirectView.setStatusCode(HttpStatus.PERMANENT_REDIRECT);
+        redirectView.setUrl(registrationRedirectAddress);
 
-        if (RegistrationResponse.RegistrationStatus.SUCCESS == registrationResponse.getRegistrationStatus()) {
-            redirectView.setUrl("http://localhost:4000");
-            return redirectView;
-        }
-        redirectView.setUrl("");
         return redirectView;
     }
 
@@ -61,8 +62,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/restore-finish")
-    public RegistrationResponse restoreFinish(@RequestBody RestoreFinishRequest request) {
-        return userRegistrationService.restoreFinish(request);
+    public RedirectView restoreFinish(@RequestParam String confirmationCode) {
+        userRegistrationService.restoreFinish(confirmationCode);
+
+        RedirectView redirectView = new RedirectView();
+        redirectView.setStatusCode(HttpStatus.PERMANENT_REDIRECT);
+        redirectView.setUrl(passwordRestorationRedirectAddress);
+        return redirectView;
     }
 
     @PostMapping(value = "/login")
@@ -77,13 +83,10 @@ public class AuthenticationController {
     public CurrentUserDto getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-        return new CurrentUserDto().setLogin(principal.getUsername())
+        return new CurrentUserDto()
+                .setLogin(principal.getUsername())
                 .setAuthorities(principal.getAuthorities().stream()
-                        .map(o -> new SimpleGrantedAuthority(o.getAuthority())).collect(Collectors.toSet()));
-    }
-
-    @PostMapping("/logout")
-    public void logout() {
-        SecurityContextHolder.getContext().setAuthentication(null);
+                        .map(o -> new SimpleGrantedAuthority(o.getAuthority()))
+                        .collect(Collectors.toSet()));
     }
 }

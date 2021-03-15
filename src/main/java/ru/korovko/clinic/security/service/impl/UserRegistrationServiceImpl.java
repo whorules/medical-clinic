@@ -63,7 +63,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public RegistrationResponse registerFinish(String confirmationCode) {
+    public void registerFinish(String confirmationCode) {
         User user = userRepository.findByConfirmationCode(confirmationCode)
                 .orElseThrow(() -> new EntityNotFoundException("No user with such confirmation code: " + confirmationCode));
         if (!user.getConfirmationCode().equals(confirmationCode)) {
@@ -72,8 +72,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         user.setConfirmationCode(null);
         user.setIsActivated(true);
         userRepository.save(user);
-        return new RegistrationResponse()
-                .setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
 
     @Override
@@ -90,20 +88,15 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public RegistrationResponse restoreFinish(RestoreFinishRequest request) {
-        String confirmationCode = request.getConfirmationCode();
-        Optional<User> optionalUser = userRepository.findByConfirmationCode(confirmationCode);
-        if (optionalUser.isEmpty()) {
-            throw new EntityNotFoundException("No user with such confirmation code: " + confirmationCode);
-        }
-        User user = optionalUser.get();
+    public void restoreFinish(String confirmationCode) {
+        User user = userRepository.findByConfirmationCode(confirmationCode)
+                .orElseThrow(() -> new EntityNotFoundException("No user with such confirmation code: " + confirmationCode));
         if (!user.getConfirmationCode().equals(confirmationCode)) {
             throw new IncorrectConfirmationCodeException("Confirmation code is incorrect");
         }
         user.setConfirmationCode(null);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+//        user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
-        return new RegistrationResponse().setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
 
     @Transactional(readOnly = true)

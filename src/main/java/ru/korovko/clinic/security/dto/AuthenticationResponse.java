@@ -12,7 +12,6 @@ public class AuthenticationResponse {
     private String message;
 
     public enum AuthenticationStatus {
-
         SUCCESS, FAIL
     }
 }
