@@ -44,6 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/auth/register-start",
                         "/auth/register-finish",
                         "/auth/restore-start",
+                        "/auth/restore-confirm/**",
                         "/auth/restore-finish")
                 .permitAll()
                 .anyRequest().authenticated()

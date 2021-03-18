@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8082
 
 spring:
   datasource:
@@ -23,14 +23,14 @@ spring:
       protocol: ${MAIL_PROTOCOL:smtps}
       registrationTopic: Your confirmation code
       registrationText: To activate your account, please follow <a href="%s">this link</a>
-      registrationLink: http://localhost:8080/auth/register-finish?confirmationCode=%s
+      registrationLink: http://localhost:8082/auth/register-finish?confirmationCode=%s
       restorationTopic: Password restoration
-      restorationLink: http://localhost:4000/restore-finish?confirmationCode=%s
+      restorationLink: http://localhost:8082/auth/restore-confirm?confirmationCode=%s
       restorationText: To restore your password, please enter this code %s
       htmlLayout: <!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>%s</body></html>
   redirect:
-    registration: http://localhost:4000
-    passwordRestoration: http://localhost:4000
+    registration: http://localhost:9090/register-finish
+    passwordRestoration: http://localhost:9090/restore-finish
 app:
   security:
     jwtSecret: JDJhJDA4JGpUdXQ2eGdZTzE1RFpGU0lkMGpkYWVsZEtGdDhXSjh6YTRXbVptVjVVNjFCRkhXc0Q0em1X

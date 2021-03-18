@@ -1,8 +1,11 @@
 package ru.korovko.clinic.security.service;
 
+import ru.korovko.clinic.security.dto.RegisterFinishRequest;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
 import ru.korovko.clinic.security.dto.RegistrationStartRequest;
 import ru.korovko.clinic.security.dto.RestoreStartRequest;
+
+import java.util.UUID;
 
 public interface UserRegistrationService {
 
@@ -12,5 +15,7 @@ public interface UserRegistrationService {
 
     RegistrationResponse restoreStart(RestoreStartRequest request);
 
-    void restoreFinish(String confirmationCode);
+    UUID restoreConfirm(String confirmCode);
+
+    void restoreFinish(RegisterFinishRequest request, String userId);
 }

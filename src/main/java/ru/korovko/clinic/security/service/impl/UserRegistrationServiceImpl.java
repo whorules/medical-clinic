@@ -10,9 +10,9 @@ import ru.korovko.clinic.entity.User;
 import ru.korovko.clinic.exception.IncorrectConfirmationCodeException;
 import ru.korovko.clinic.exception.UserAlreadyRegisteredException;
 import ru.korovko.clinic.mapper.UserMapper;
+import ru.korovko.clinic.security.dto.RegisterFinishRequest;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
 import ru.korovko.clinic.security.dto.RegistrationStartRequest;
-import ru.korovko.clinic.security.dto.RestoreFinishRequest;
 import ru.korovko.clinic.security.dto.RestoreStartRequest;
 import ru.korovko.clinic.security.dto.UserAction;
 import ru.korovko.clinic.security.repository.UserRepository;
@@ -20,7 +20,6 @@ import ru.korovko.clinic.security.service.UserRegistrationService;
 import ru.korovko.clinic.service.MailService;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -41,10 +40,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     @Override
     public RegistrationResponse registerStart(RegistrationStartRequest request) {
-        User user;
-        Optional<User> byEmail = userRepository.findByEmail(request.getEmail());
-        if (byEmail.isPresent()) {
-            user = byEmail.get();
+        User user = userRepository.findByEmail(request.getEmail()).orElse(null);
+        if (user != null) {
             if (user.getIsActivated()) {
                 throw new UserAlreadyRegisteredException("User with such email has already been registered");
             }
@@ -88,14 +85,21 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public void restoreFinish(String confirmationCode) {
-        User user = userRepository.findByConfirmationCode(confirmationCode)
-                .orElseThrow(() -> new EntityNotFoundException("No user with such confirmation code: " + confirmationCode));
-        if (!user.getConfirmationCode().equals(confirmationCode)) {
-            throw new IncorrectConfirmationCodeException("Confirmation code is incorrect");
+    public UUID restoreConfirm(String confirmCode) {
+        User user = userRepository.findByConfirmationCode(confirmCode).orElseThrow(() -> new EntityNotFoundException("No user with such confirm code"));
+        return user.getId();
+    }
+
+    @Override
+    public void restoreFinish(RegisterFinishRequest request, String userId) {
+        User user = userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new EntityNotFoundException("No user with such id: " + userId));
+        String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
+        if (passwordEncoder.matches(user.getPassword(), encodedNewPassword)) {
+            throw new RuntimeException("Use new password");
         }
+        user.setPassword(encodedNewPassword);
         user.setConfirmationCode(null);
-//        user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
     }
 

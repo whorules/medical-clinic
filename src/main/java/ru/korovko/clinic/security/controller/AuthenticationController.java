@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,14 +18,18 @@ import org.springframework.web.servlet.view.RedirectView;
 import ru.korovko.clinic.security.dto.AuthenticationRequest;
 import ru.korovko.clinic.security.dto.AuthenticationResponse;
 import ru.korovko.clinic.security.dto.CurrentUserDto;
+import ru.korovko.clinic.security.dto.RegisterFinishRequest;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
 import ru.korovko.clinic.security.dto.RegistrationStartRequest;
 import ru.korovko.clinic.security.dto.RestoreStartRequest;
 import ru.korovko.clinic.security.dto.UserPrincipal;
 import ru.korovko.clinic.security.service.AuthenticationService;
 import ru.korovko.clinic.security.service.UserRegistrationService;
+import ru.korovko.clinic.utils.CookieUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -61,14 +66,22 @@ public class AuthenticationController {
         return userRegistrationService.restoreStart(request);
     }
 
-    @PostMapping("/restore-finish")
-    public RedirectView restoreFinish(@RequestParam String confirmationCode) {
-        userRegistrationService.restoreFinish(confirmationCode);
+    @GetMapping("/restore-confirm")
+    public RedirectView restoreConfirm(@RequestParam String confirmationCode, HttpServletResponse response) {
+        UUID userId = userRegistrationService.restoreConfirm(confirmationCode);
+        response.addCookie(CookieUtils.createCookie("userId", userId.toString()));
 
         RedirectView redirectView = new RedirectView();
         redirectView.setStatusCode(HttpStatus.PERMANENT_REDIRECT);
         redirectView.setUrl(passwordRestorationRedirectAddress);
         return redirectView;
+    }
+
+    @PostMapping("/restore-finish")
+    public RegistrationResponse restoreFinish(@RequestBody @Valid RegisterFinishRequest request,
+                                              @CookieValue(name = "userId") String userId) {
+        userRegistrationService.restoreFinish(request, userId);
+        return new RegistrationResponse().setRegistrationStatus(RegistrationResponse.RegistrationStatus.SUCCESS);
     }
 
     @PostMapping(value = "/login")
