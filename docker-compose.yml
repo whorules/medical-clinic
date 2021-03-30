@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  postgres:
+    container_name: pg-medical-clinic
+    image: postgres:12
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: medical_clinic
+    volumes:
+      - C:\Users\korovko\Docker:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - med-clinic-net
+    restart: unless-stopped
+
+  backend:
+    container_name: medical-clinic-backend
+    image: medical-clinic:1.0
+    ports:
+      - "8080:8080"
+    networks:
+      - med-clinic-net
+    depends_on:
+      - "postgres"
+    restart: unless-stopped
+
+networks:
+  med-clinic-net:
+    driver: bridge
