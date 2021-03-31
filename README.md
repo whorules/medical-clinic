@@ -1,19 +1,20 @@
-# Medical Clinic Backend
+# Medical clinic authorization service
 
-> Backend part of an application simulating the work of an information system for document management of a medical rehabilitation clinic.</b>
+> Backend part of an application simulating the work of an information system for document management of a medical rehabilitation clinic</b>
+
+### Features
+
 
 ### Installing
 
 * Clone repository
-* Set up JDK 11 
-* Project uses lombok. You have to install lombok plugin and enable annotation processing: Settings -> Build, Execution, Deployment -> Compiler -> Annotation Processors -> click "Enable annotation processing"
-* Create database "medical-clinic" in PostgreSQL and set up login and password in src -> main -> resources -> "application.properties" file
+* Install docker and maven
+* Change your directory to the root of project
+* Use command `docker build --build-arg JAR_FILE=medical-clinic.jar -t medical-clinic:1.0 -f Dockerfile .` to create docker image
 
 ### Building and Starting
-
-## Deployment
-
-## Running the tests
+* Install docker-compose
+* Change directory to the root of project and user `docker-compose up -d` command to start an application. You will se running application on port 
 
 ## Authors
 
