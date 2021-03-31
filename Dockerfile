@@ -1,7 +1,7 @@
 FROM maven:3.6.3-jdk-11 AS build
-COPY pom.xml /opt/user-service/pom.xml
-COPY src /opt/user-service/src
-WORKDIR /opt/user-service
+COPY pom.xml /opt/medical-clinic/pom.xml
+COPY src /opt/medical-clinic/src
+WORKDIR /opt/medical-clinic
 RUN mvn clean package
 
 FROM openjdk:11
@@ -11,7 +11,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ENV JAVA_OPTS ""
 
-COPY target/medical-clinic.jar /opt/medical-clinic/medical-clinic.jar
+COPY --from=build /opt/medical-clinic/target/medical-clinic.jar /opt/medical-clinic/medical-clinic.jar
 
-CMD java $JAVA_OPTS -jar /opt/user-service/medical-clinic.jar
+CMD java $JAVA_OPTS -jar /opt/medical-clinic/medical-clinic.jar
 EXPOSE 8080

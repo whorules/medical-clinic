@@ -18,7 +18,7 @@ services:
 
   backend:
     container_name: medical-clinic-backend
-    image: medical-clinic:1.0
+    image: medical-clinic-backend
     ports:
       - "8080:8080"
     networks:
