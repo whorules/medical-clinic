@@ -13,11 +13,12 @@ Frontend part of application is [here](https://github.com/Polt0s/crm-for-clinic)
 ### Installing
 * Clone repository
 * Install docker
-* Change your directory to the root of project
+* Open command line and change your directory to the root of project
 * Use command `docker build -t medical-clinic-backend -f Dockerfile .` to create docker image
 
 ### Building and Starting
-* Change directory to the root of project and user `docker-compose up -d` command to start an application. You can see the swagger on address http://localhost:8080/swagger-ui.html
+* Open command line and change your directory to the root of project
+* Use command `docker-compose up -d` to start an application. You can see the swagger on address http://localhost:8080/swagger-ui.html
 
 To stop an application use command `docker ps` to see docker containers. Find container with a name `medical-clinic-backend`, copy its id and use command `docker stop 18f58c2a6b52` where `18f58c2a6b52` - id of your container
 
