@@ -15,22 +15,20 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@Accessors(chain = true)
-public class Patient {
+public class Event {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Type(type = "pg-uuid")
     private UUID id;
-    private String firstName;
-    private String lastName;
-    private String diagnosis;
-    private Integer socialSecurityNumber;
-    private PatientStatus status;
-    private User doctor;
-    private LocalDateTime registrationDate;
-    private LocalDateTime dischargingDate;
+    private Patient patient;
+    private LocalDateTime date;
+    private EventStatus status;
+    private LocalDateTime statusChangedDate;
+    private User cancelledBy;
+    private String cancellationReason;
 }
