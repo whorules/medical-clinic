@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: medical_clinic
     volumes:
-      - C:\Users\korovko\Docker:/var/lib/postgresql/data
+      - ./var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:

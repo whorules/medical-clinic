@@ -7,9 +7,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -25,10 +23,14 @@ public class Event {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Type(type = "pg-uuid")
     private UUID id;
-    private Patient patient;
+    @ManyToOne
+    @JoinColumn(name = "appointment_id")
+    private Appointment appointment;
     private LocalDateTime date;
+    @Enumerated(EnumType.STRING)
     private EventStatus status;
-    private LocalDateTime statusChangedDate;
+    private LocalDateTime statusChangedAt;
+    @ManyToOne
     private User cancelledBy;
     private String cancellationReason;
 }

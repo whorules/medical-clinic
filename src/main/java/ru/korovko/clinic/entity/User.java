@@ -7,12 +7,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -38,6 +33,6 @@ public class User {
     private Boolean isActivated = false;
 
     public boolean isDoctor() {
-        return speciality.equals(Speciality.DOCTOR);
+        return Speciality.DOCTOR == this.speciality;
     }
 }

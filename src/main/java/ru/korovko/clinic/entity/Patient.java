@@ -7,10 +7,9 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -27,10 +26,16 @@ public class Patient {
     private UUID id;
     private String firstName;
     private String lastName;
+    private LocalDateTime dateOfBirth;
     private String diagnosis;
     private Integer socialSecurityNumber;
+    @Enumerated(EnumType.STRING)
     private PatientStatus status;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User doctor;
-    private LocalDateTime registrationDate;
-    private LocalDateTime dischargingDate;
+    @OneToMany(mappedBy = "patient")
+    private List<Appointment> appointments;
+    private LocalDateTime registeredAt;
+    private LocalDateTime dischargedAt;
 }
