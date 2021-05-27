@@ -8,15 +8,16 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "registered_user")
 @Data
-@Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+@Accessors(chain = true)
+public class Patient {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -25,14 +26,16 @@ public class User {
     private UUID id;
     private String firstName;
     private String lastName;
+    private LocalDateTime dateOfBirth;
+    private String diagnosis;
+    private Integer socialSecurityNumber;
     @Enumerated(EnumType.STRING)
-    private Speciality speciality;
-    private String email;
-    private String password;
-    private String confirmationCode;
-    private Boolean isActivated = false;
-
-    public boolean isDoctor() {
-        return Speciality.DOCTOR == this.speciality;
-    }
+    private PatientStatus status;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User doctor;
+    @OneToMany(mappedBy = "patient")
+    private List<Appointment> appointments;
+    private LocalDateTime registeredAt;
+    private LocalDateTime dischargedAt;
 }

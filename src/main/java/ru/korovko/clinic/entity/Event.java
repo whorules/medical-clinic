@@ -8,31 +8,29 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "registered_user")
 @Data
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Event {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Type(type = "pg-uuid")
     private UUID id;
-    private String firstName;
-    private String lastName;
+    @ManyToOne
+    @JoinColumn(name = "appointment_id")
+    private Appointment appointment;
+    private LocalDateTime date;
     @Enumerated(EnumType.STRING)
-    private Speciality speciality;
-    private String email;
-    private String password;
-    private String confirmationCode;
-    private Boolean isActivated = false;
-
-    public boolean isDoctor() {
-        return Speciality.DOCTOR == this.speciality;
-    }
+    private EventStatus status;
+    private LocalDateTime statusChangedAt;
+    @ManyToOne
+    private User cancelledBy;
+    private String cancellationReason;
 }
