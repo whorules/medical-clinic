@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class Patient {
     private UUID id;
     private String firstName;
     private String lastName;
-    private LocalDateTime dateOfBirth;
+    private LocalDate dateOfBirth;
     private String diagnosis;
     private Integer socialSecurityNumber;
     @Enumerated(EnumType.STRING)

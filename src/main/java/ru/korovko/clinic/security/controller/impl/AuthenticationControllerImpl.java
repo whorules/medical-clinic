@@ -100,12 +100,12 @@ public class AuthenticationControllerImpl implements AuthenticationController {
 
     @Override
     @GetMapping(value = "/me")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN'")
+    @PreAuthorize("hasAnyRole('ROLE_DOCTOR', 'ROLE_NURSE')")
     public CurrentUserDto getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         return new CurrentUserDto()
-                .setLogin(principal.getUsername())
+                .setEmail(principal.getUsername())
                 .setAuthorities(principal.getAuthorities().stream()
                         .map(o -> new SimpleGrantedAuthority(o.getAuthority()))
                         .collect(Collectors.toSet()));
