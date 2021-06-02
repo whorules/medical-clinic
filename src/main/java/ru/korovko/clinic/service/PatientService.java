@@ -6,5 +6,5 @@ import java.util.UUID;
 
 public interface PatientService {
 
-    void create(CreatePatientRequest request, UUID id);
+    void create(CreatePatientRequest request, UUID doctorId);
 }

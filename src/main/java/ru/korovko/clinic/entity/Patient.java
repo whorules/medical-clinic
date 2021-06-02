@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -33,10 +34,11 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     private PatientStatus status;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "doctor_id")
     private User doctor;
     @OneToMany(mappedBy = "patient")
     private List<Appointment> appointments;
+    @CreationTimestamp
     private LocalDateTime registeredAt;
     private LocalDateTime dischargedAt;
 }
