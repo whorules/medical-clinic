@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.korovko.clinic.controller.PatientController;
 import ru.korovko.clinic.dto.CreatePatientRequest;
+import ru.korovko.clinic.dto.CreatePatientResponse;
 import ru.korovko.clinic.security.dto.CurrentUserDto;
 import ru.korovko.clinic.security.utils.AuthenticationResolver;
 import ru.korovko.clinic.service.PatientService;
@@ -23,8 +24,8 @@ public class PatientControllerImpl implements PatientController {
     @Override
     @PostMapping
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
-    public void createPatient(@RequestBody CreatePatientRequest request) {
+    public CreatePatientResponse createPatient(@RequestBody CreatePatientRequest request) {
         CurrentUserDto currentUser = authenticationResolver.getCurrentUser();
-        patientService.create(request, currentUser.getId());
+        return patientService.create(request, currentUser.getId());
     }
 }

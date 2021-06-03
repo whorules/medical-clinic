@@ -12,7 +12,7 @@ public interface PatientMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "request.firstName", target = "firstName")
-    @Mapping(source = "request.firstName", target = "lastName")
+    @Mapping(source = "request.lastName", target = "lastName")
     @Mapping(source = "doctor", target = "doctor")
     Patient toPatient(CreatePatientRequest request, User doctor);
 
