@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.korovko.clinic.security.mapper.UserPrincipalMapper;
-import ru.korovko.clinic.security.repository.UserRepository;
+import ru.korovko.clinic.repository.UserRepository;
 
 @AllArgsConstructor
 @Service

@@ -1,4 +1,4 @@
-package ru.korovko.clinic.mapper;
+package ru.korovko.clinic.security.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.korovko.clinic.entity.User;
 import ru.korovko.clinic.exception.IncorrectConfirmationCodeException;
 import ru.korovko.clinic.exception.UserAlreadyRegisteredException;
-import ru.korovko.clinic.mapper.UserMapper;
+import ru.korovko.clinic.security.mapper.UserMapper;
 import ru.korovko.clinic.security.dto.RegisterFinishRequest;
 import ru.korovko.clinic.security.dto.RegistrationResponse;
 import ru.korovko.clinic.security.dto.RegistrationStartRequest;
 import ru.korovko.clinic.security.dto.RestoreStartRequest;
 import ru.korovko.clinic.security.dto.UserAction;
-import ru.korovko.clinic.security.repository.UserRepository;
+import ru.korovko.clinic.repository.UserRepository;
 import ru.korovko.clinic.security.service.UserRegistrationService;
 import ru.korovko.clinic.service.MailService;
 

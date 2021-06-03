@@ -1,4 +1,4 @@
-package ru.korovko.clinic.security.repository;
+package ru.korovko.clinic.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.korovko.clinic.entity.User;
