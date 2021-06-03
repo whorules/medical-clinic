@@ -2,6 +2,8 @@ package ru.korovko.clinic.dto.pattern;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * Represents pattern of an appointment for creating events.
  * Using this pattern we create specific count of an appointments in specific period of time
@@ -10,6 +12,7 @@ import lombok.Data;
 @Data
 public class AppointmentPattern {
 
+    private LocalDateTime startDate;
     private Integer countPerTimeUnit;
     private AppointmentTimeUnit perTimeUnit;
     private Integer duration;
