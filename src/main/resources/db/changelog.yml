@@ -35,3 +35,12 @@ databaseChangeLog:
             path: sql/004-add-event.sql
             enchoding: utf8
             relativeToChangelogFile: true
+  - changeSet:
+      runAlways: false
+      id: 20210603_04
+      author: Alexey Korovko
+      changes:
+        - sqlFile:
+            path: sql/005-add-name-for-appointment.sql
+            enchoding: utf8
+            relativeToChangelogFile: true

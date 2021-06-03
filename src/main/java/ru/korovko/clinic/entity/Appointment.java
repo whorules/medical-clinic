@@ -28,6 +28,7 @@ public class Appointment {
     @JoinColumn(name = "patient_id")
     private Patient patient;
     @Enumerated(EnumType.STRING)
+    private String name;
     private AppointmentType type;
     private LocalDateTime createdAt;
     @ManyToOne

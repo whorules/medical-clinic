@@ -12,6 +12,7 @@ import ru.korovko.clinic.dto.CreatePatientResponse;
 import ru.korovko.clinic.security.dto.CurrentUserDto;
 import ru.korovko.clinic.security.utils.AuthenticationResolver;
 import ru.korovko.clinic.service.PatientService;
+import ru.korovko.clinic.service.UserService;
 
 @RestController
 @RequestMapping("/patients")
@@ -25,7 +26,7 @@ public class PatientControllerImpl implements PatientController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_DOCTOR')")
     public CreatePatientResponse createPatient(@RequestBody CreatePatientRequest request) {
-        CurrentUserDto currentUser = authenticationResolver.getCurrentUser();
-        return patientService.create(request, currentUser.getId());
+        CurrentUserDto doctor = authenticationResolver.getCurrentUser();
+        return patientService.create(request, doctor.getId());
     }
 }

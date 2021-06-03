@@ -1,0 +1,1 @@
+ALTER TABLE appointment ADD COLUMN name text NOT NULL;

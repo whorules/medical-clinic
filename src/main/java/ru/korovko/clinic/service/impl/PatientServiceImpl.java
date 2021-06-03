@@ -12,6 +12,7 @@ import ru.korovko.clinic.repository.PatientRepository;
 import ru.korovko.clinic.service.PatientService;
 import ru.korovko.clinic.service.UserService;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.UUID;
 
 @Service
@@ -21,6 +22,12 @@ public class PatientServiceImpl implements PatientService {
     private final PatientMapper mapper;
     private final UserService userService;
     private final PatientRepository repository;
+
+    @Override
+    public Patient getById(UUID patientId) {
+        return repository.findById(patientId)
+                .orElseThrow(() -> new EntityNotFoundException("Patient with such id does not exist"));
+    }
 
     @Override
     public CreatePatientResponse create(CreatePatientRequest request, UUID doctorId) {
